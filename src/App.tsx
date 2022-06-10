@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import List from "./components/List";
+import Form from "./components/Form";
 
 //contrato que debe tener un objeto
 interface Sub {
@@ -8,6 +10,13 @@ interface Sub {
   subMonths: number;
   description?: string;
 }
+// un state puede tener varios estados, por lo que re comienda separlos ya que pueden ir cambiando y de esta
+// forma solo sellecionamos el que queremos utilizar
+
+interface AppState {
+  subs: Array<Sub>;
+}
+
 // Estado inicial del array
 const INITIAL_STATE = [
   {
@@ -25,7 +34,7 @@ const INITIAL_STATE = [
 // Los array en typescript son parametrizables
 // en este ejemplo useState recibe el array de tipo subs
 function App() {
-  const [subs, setSubs] = useState<Array<Sub>>([]);
+  const [subs, setSubs] = useState<AppState["subs"]>([]);
 
   useEffect(() => {
     setSubs(INITIAL_STATE);
@@ -34,19 +43,8 @@ function App() {
   return (
     <div className="App">
       <h1>Mis Subs</h1>
-      <ul>
-        {subs.map((sub) => {
-          return (
-            <li key={sub.nick}>
-              <img src={sub.avatar} alt={`Avatar for ${sub.nick}`} />
-              <h4>
-                {sub.nick} (<small>{sub.subMonths}</small>)
-              </h4>
-              <p>{sub.description?.substring(0, 100)}</p>
-            </li>
-          );
-        })}
-      </ul>
+      <List subs={subs} />
+      <Form />
     </div>
   );
 }
