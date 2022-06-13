@@ -1,20 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import List from "./components/List";
 import Form from "./components/Form";
+import { Sub } from "./types";
 
-//contrato que debe tener un objeto
-interface Sub {
-  nick: string;
-  avatar: string;
-  subMonths: number;
-  description?: string;
-}
+// useRef es un hook que guarda un valor sin renderizar
 // un state puede tener varios estados, por lo que re comienda separlos ya que pueden ir cambiando y de esta
-// forma solo sellecionamos el que queremos utilizar
+// forma solo seleccionamos el que queremos utilizar
+//Este estado guarda una lista de Sub
 
 interface AppState {
   subs: Array<Sub>;
+  newSubsNumber: number;
 }
 
 // Estado inicial del array
@@ -36,15 +33,25 @@ const INITIAL_STATE = [
 function App() {
   const [subs, setSubs] = useState<AppState["subs"]>([]);
 
+  const [newSubsNumber, setNewSubsNumber] =
+    useState<AppState["newSubsNumber"]>(0);
+
+  //le pasamos lo que queremos guardar en divRef en este caso el HTMLdivElement
+  const divRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     setSubs(INITIAL_STATE);
   }, []);
 
+  const handleNewSub = (newSub: Sub): void => {
+    setSubs((subs) => [...subs, newSub]);
+  };
+
   return (
-    <div className="App">
+    <div className="App" ref={divRef}>
       <h1>Mis Subs</h1>
       <List subs={subs} />
-      <Form />
+      <Form onNewSub={handleNewSub} />
     </div>
   );
 }

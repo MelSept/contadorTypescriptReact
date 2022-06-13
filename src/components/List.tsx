@@ -1,13 +1,10 @@
+import { Sub } from "../types";
+
 //Le decimos de que tipo son las Props
 //Props tiene un subs de tipo array que posee los objetos que vemos ahi adentro
 
 interface Props {
-  subs: Array<{
-    nick: string;
-    avatar: string;
-    subMonths: number;
-    description?: string;
-  }>;
+  subs: Array<Sub>;
 }
 //Le decimos a List que es un comoponente de React ya que no soporta todos los parametros en Typescript
 const List: React.FunctionComponent<Props> = ({ subs }) => {

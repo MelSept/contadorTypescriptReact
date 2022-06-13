@@ -1,25 +1,42 @@
-import React, { useState } from "react";
+import useNewSubForm from "../hooks/useNewSubForm";
+import { Sub } from "../types";
 
-const Form = () => {
-  const [inputValues, setInputValues] = useState({
-    nick: "",
-    subMonths: 0,
-    avatar: "",
-    description: "",
-  });
+interface FormProps {
+  onNewSub: (newSub: Sub) => void;
+}
 
-  const handleSubmit = () => {};
+const Form = ({ onNewSub }: FormProps) => {
+  const [inputValues, dispatch] = useNewSubForm();
+
+  //evita que se pierdan los datos al refrescar el formulario
+  //le pasamos el nuevo prop y las array
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onNewSub(inputValues);
+    handleClear();
+  };
 
   // "e" refiere a evento, en este caso, el evento cambio, TS no acepta tipo "any" por lo que le pasamos
   // que es un evento de react del tipo HTMLInputElement
+  //dispatch acepta una funcion asincronica por lo que puede o no despachar una o mas acciones
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setInputValues({
-      ...inputValues,
-      [e.target.name]: e.target.value,
+    const { name, value } = e.target;
+
+    dispatch({
+      type: "change_value",
+      payload: {
+        inputName: name,
+        inputValue: value,
+      },
     });
+  };
+
+  const handleClear = () => {
+    dispatch({ type: "clear" });
   };
 
   return (
@@ -52,7 +69,10 @@ const Form = () => {
           name="description"
           placeholder="description"
         />
-        <button>Save new Sub!</button>
+        <button onClick={handleClear} type="button">
+          Clear the form
+        </button>
+        <button type="submit">Save new Sub!</button>
       </form>
     </div>
   );
