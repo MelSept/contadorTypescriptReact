@@ -28,7 +28,9 @@ function App() {
   //como realizar un fecth de datos
   useEffect(() => {
     const fetchSubs = (): Promise<SubsResponseFromApi> => {
-      return fetch("http://localhost:3001/subs").then((res) => res.json());
+      return fetch("https://apimocha.com/hikarisubs/subs").then((res) =>
+        res.json()
+      );
     };
 
     const mapFromApiToSubs = (apiResponse: SubsResponseFromApi): Array<Sub> => {
